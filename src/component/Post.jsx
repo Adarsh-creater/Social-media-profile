@@ -9,10 +9,8 @@ const Post = (props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [postForm, setPostForm] = useState({
     description: "",
-    tags: [],
     image: null, // Single image
   });
-  const [currentTag, setCurrentTag] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,28 +19,6 @@ const Post = (props) => {
 
   const handleFileChange = (e) => {
     setPostForm({ ...postForm, image: e.target.files[0] }); // Single file
-  };
-
-  const handleTagInput = (e) => {
-    setCurrentTag(e.target.value);
-  };
-
-  const handleAddTag = (e) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      const trimmedTag = currentTag.trim();
-      if (trimmedTag && !postForm.tags.includes(trimmedTag)) {
-        setPostForm({ ...postForm, tags: [...postForm.tags, trimmedTag] });
-      }
-      setCurrentTag("");
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove) => {
-    setPostForm({
-      ...postForm,
-      tags: postForm.tags.filter((tag) => tag !== tagToRemove),
-    });
   };
 
   const handleSave = () => {
@@ -55,7 +31,6 @@ const Post = (props) => {
     setIsPopupOpen(false);
     setPostForm({
       description: "",
-      tags: [],
       image: null,
     });
   };
@@ -64,7 +39,6 @@ const Post = (props) => {
     setIsPopupOpen(false);
     setPostForm({
       description: "",
-      tags: [],
       image: null,
     });
   };
@@ -115,32 +89,6 @@ const Post = (props) => {
               placeholder="Description"
               className="border w-full p-2 rounded mb-4"
             ></textarea>
-            <div className="border w-full p-2 rounded mb-4">
-              <div className="flex flex-wrap gap-2">
-                {postForm.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-200 text-gray-800 px-2 py-1 rounded flex items-center"
-                  >
-                    {tag}
-                    <button
-                      className="ml-2 text-red-500"
-                      onClick={() => handleRemoveTag(tag)}
-                    >
-                      ×
-                    </button>
-                  </span>
-                ))}
-              </div>
-              <input
-                type="text"
-                value={currentTag}
-                onChange={handleTagInput}
-                onKeyDown={handleAddTag}
-                placeholder="Add tags and press Enter"
-                className="w-full mt-2 p-2 border rounded"
-              />
-            </div>
             <input
               type="file"
               onChange={handleFileChange}
@@ -203,13 +151,6 @@ const Post = (props) => {
                   >
                     {post.description}
                   </ReactReadMoreReadLess>
-                  <div className="flex flex-wrap">
-                    {post.tags.map((tag, index) => (
-                      <span key={index} className="text-blue-500 p-1">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
 
@@ -237,8 +178,9 @@ const Post = (props) => {
             {/* Actions */}
             <div className="flex items-center justify-evenly">
               <button
-                className={`px-4 text-white py-2 rounded ${post.isLiked ? "bg-red-500" : "bg-blue-500"
-                  }`}
+                className={`px-4 text-white py-2 rounded ${
+                  post.isLiked ? "bg-red-500" : "bg-blue-500"
+                }`}
                 onClick={() => handleToggleLike(index)}
               >
                 {post.isLiked ? (

@@ -3,7 +3,6 @@ import img from '../assets/image/profile.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-
 const Personal = (props) => {
   const [profile, setProfile] = useState({
     firstName: 'First Name',
@@ -15,10 +14,11 @@ const Personal = (props) => {
     email: 'example@domain.com',
     dob: '2001-01-01', // Default value for date input
     phone: '1234567890',
-    profileImage: img,
   });
-  props.onProfileImageChange(profile.profileImage);
+
   props.onProfileNameChange(profile.firstName + " " + profile.lastName);
+  props.onProfileImageChange(img);
+
   const [isEditing, setIsEditing] = useState(false);
   const [isContactInfoVisible, setIsContactInfoVisible] = useState(false);
   const [tempProfile, setTempProfile] = useState({ ...profile });
@@ -33,17 +33,8 @@ const Personal = (props) => {
     setTempProfile({ ...tempProfile, [name]: value });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setTempProfile({ ...tempProfile, profileImage: imageUrl });
-    }
-  };
-
   const handleSave = () => {
     setProfile({ ...tempProfile });
-
     setIsEditing(false);
   };
 
@@ -57,16 +48,14 @@ const Personal = (props) => {
   };
 
   return (
-    <div className=" p-6 ">
+    <div className="p-6">
       <div className="flex items-center gap-4 mb-2 text-gray-500">
         <img
-          src={profile.profileImage}
+          src={img}
           alt="profile"
-          className="w-[170px] h-[170px] rounded-full "
+          className="w-[170px] h-[170px] rounded-full object-cover"
         />
         {props.role === 'user' && (
-
-
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             onClick={() => setIsEditing(true)}
@@ -75,52 +64,50 @@ const Personal = (props) => {
           </button>
         )}
       </div>
-      <div className='flex items-center justify-between text-gray-500'>
+      <div className="flex items-center justify-between text-gray-500">
         <div>
-          <div className='text-black font-bold text-lg'>
-            
+          <div className="text-black font-bold text-lg">
             <span>{profile.firstName} </span>
             <span>{profile.lastName}</span>
-            
           </div>
           <div>{profile.headline}</div>
           <div>
-            <p>{profile.country} {profile.city}, {profile.state}</p>
+            <p>
+              {profile.country} {profile.city}, {profile.state}
+            </p>
           </div>
         </div>
         <div>
-          <div> <span>Follow : 150</span> <br /> Following : 200</div>
+          <div>
+            <span>Follow : 150</span> <br /> Following : 200
+          </div>
         </div>
       </div>
 
       <div>
         <div
-          className="text-blue-600 underline cursor-pointer "
+          className="text-blue-600 underline cursor-pointer"
           onClick={() => setIsContactInfoVisible(true)}
         >
           Contact info.
         </div>
 
-
-        {props.role === 'visiter' && (
-
-          <div className='flex gap-2 my-4'>
+        {props.role === 'visitor' && (
+          <div className="flex gap-2 my-4">
             <button
-              className={`px-4 py-2 rounded-[50px] transition-all duration-300 ${isFollowing
-                ? 'bg-white text-black border border-black hover:bg-gray-200'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
-                }`}
+              className={`px-4 py-2 rounded-[50px] transition-all duration-300 ${
+                isFollowing
+                  ? 'bg-white text-black border border-black hover:bg-gray-200'
+                  : 'bg-blue-500 text-white hover:bg-blue-600'
+              }`}
               onClick={toggleFollow}
             >
               {isFollowing ? 'Following' : 'Follow'}
             </button>
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-[50px] hover:bg-blue-600"
-            >
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-[50px] hover:bg-blue-600">
               Message
             </button>
           </div>
-
         )}
       </div>
 
@@ -199,12 +186,6 @@ const Personal = (props) => {
                 value={tempProfile.phone}
                 onChange={handleInputChange}
                 placeholder="Phone"
-                className="border p-2 rounded"
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
                 className="border p-2 rounded"
               />
             </div>
